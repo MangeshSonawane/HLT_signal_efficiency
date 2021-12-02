@@ -28,9 +28,9 @@ jobDir = MYDIR+'/'+jobName
 
 flags ={}
 
-for i in range(90) :
+for jobN in os.listdir(jobDir) :
 
-	filename = jobDir+'/Job_%s/hlt.stderr'%str(i)
+	filename = jobDir+'/'+jobN+'/hlt.stderr'
 	if not os.path.exists(filename) : 
 		continue
 #	os.system("echo "+filename)
@@ -62,7 +62,7 @@ for i in range(90) :
 			chunks = line.split()
 			Total += int(chunks[4])
 			Passed += int(chunks[7])
-			print i, chunks[4]
+#			print jobN, chunks[4]
 
 print 
 print "Total events ; {}".format(Total)

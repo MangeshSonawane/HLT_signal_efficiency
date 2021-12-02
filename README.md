@@ -8,7 +8,7 @@ Supporting files are : hltGetConfiguration.py, HLTpaths.py and sample.list
 
  - Usage : $ python makefile.py \<jobName\> \<CMSSWrel\> \<filelist\> -p \<proxyPath\> -n \<nFiles\> -q \<jobFlavour\>
     - \<cfgFileName\> (mandatory) = name of your configuration file (e.g. hlt_config.py)
-    - \<jobName\> (mandatory)     = name of the job (eg. Job_signal_V5)
+    - \<jobName\> (mandatory)     = name of the job (eg. Jobs_test)
     - \<CMSSWrel\> (mandatory)    = directory where the top of a CMSSW release is located (eg. $CMSSW_BASE)
     - \<filelist\> (mandatory)    = name of the text file which contains a list of sample root files
     - \<proxyPath\> (optional)    = location of your voms cms proxy (needed if accessing non local files). Note: keep your proxy in a private directory.

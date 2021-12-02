@@ -86,3 +86,4 @@ condor_sub.close()
 
 subjob = open ('sub_total.jobb', 'w')
 subjob.write("condor_submit "+MYDIR+"/condor_cluster.sub\n")
+os.system("chmod +x sub_total.jobb")

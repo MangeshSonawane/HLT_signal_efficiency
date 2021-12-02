@@ -11,17 +11,19 @@ usage = "usage: python %prog [options] arg"
 parser=OptionParser(usage=usage)
 parser.add_option("-q","--flavour",dest="jobFlavour",type="str",default="longlunch",help="job FLAVOUR",metavar="FLAVOUR")
 parser.add_option("-p","--proxy",dest="proxyPath",type="str",default="noproxy",help="Proxy path")
+parser.add_option("-n","--nFiles",dest="nFiles",type="str",default="-1",help="nFiles")
 
 opts, args = parser.parse_args()
 
 
-help_text = '\npython makejobs.py <jobName> <CMSSWrel> <filelist> -p <proxyPath> -q <jobFlavour>\n'
+help_text = '\npython makejobs.py <jobName> <CMSSWrel> <filelist> -p <proxyPath> -n <nFiles> -q <jobFlavour> \n'
 help_text += '\n<cfgFileName> (mandatory) = name of your configuration file (e.g. hlt_config.py)'
-help_text += '\n<jobName> (mandatory) = name of the job (eg. Job_signal_V5)'
+help_text += '\n<jobName> (mandatory) = name of the job (eg. Jobs_test)'
 help_text += '\n<CMSSWrel> (mandatory) = directory where the top of a CMSSW release is located (eg. $CMSSW_BASE)'
 help_text += '\n<filelist> (mandatory) = name of the text file which contains a list of sample root files'
 help_text += '\n<proxyPath> (optional) = location of your voms cms proxy (needed if accessing non local files). Note: keep your proxy in a private directory.'
-help_text += '\n<flavour> (optional) = job flavour (default=workday)\n'
+help_text += '\n<nFiles> (optional) = number of files to run over (1 file per job); Default: -1 (all files)'
+help_text += '\n<flavour> (optional) = job flavour; Default : longlunch\n'
 
 
 if len(sys.argv) < 4 : 
@@ -48,6 +50,15 @@ cmsEnv = sys.argv[2] + '/src'
 jobName = sys.argv[1]
 k = 0
 
+nFiles = int(opts.nFiles)
+nJobs = len(lines) if nFiles == -1 else nFiles
+
+if nJobs == 0 : sys.exit("No jobs made")
+elif nJobs <-1 : sys.exit("Error : Invalid number of jobs! No jobs made")
+elif nJobs > len(lines) :
+	nJobs = len(lines) 
+	print "Only {} files in {}\n".format(nJobs, filename)
+
 for line in lines :
 	line = line.rstrip()
 	jobDir = jobName+"/Job_%s"%str(k)
@@ -66,7 +77,8 @@ for line in lines :
 	outputfile.write('cmsRun hlt.py\n')
 	outputfile.close()
 	k+=1
-	print "Making job file : (%d/%d)"%(k,len(lines))
+	print "Making job file : (%d/%d)"%(k,nJobs)
+	if k == nFiles : break
 
 condor_str = 'executable = $(filename)\n'
 if opts.proxyPath != "noproxy":

@@ -32,19 +32,23 @@ for jobN in os.listdir(jobDir) :
 
 	filename = jobDir+'/'+jobN+'/hlt.stderr'
 	if not os.path.exists(filename) : 
+		print filename, " does not exist"
 		continue
 #	os.system("echo "+filename)
 	hltout = open(filename)
 	lines = hltout.readlines()
-#	cond = False
+
 	for l in L1filters :
 		flags[l] = True
 
+	passed = False
 	for line in lines :
 		line = line.rstrip()
 		if not "TrigReport" in line : continue
 
 #		print line
+#		if "End" in line : break
+#		else : continue
 	
 		for h in HLTpaths :		
 			if h in line and "Modules in Path" not in line:
@@ -59,20 +63,21 @@ for jobN in os.listdir(jobDir) :
 				L1filters[l]+= int(chunks[4])
 	
 		if 'passed' in line :
+			passed = True
 			chunks = line.split()
 			Total += int(chunks[4])
 			Passed += int(chunks[7])
-#			print jobN, chunks[4]
+	if not passed :
+		print jobN
 
-print 
-print "Total events ; {}".format(Total)
-print "Passed events; {} ;\t{}".format(Passed, float(Passed)/Total)
+#print 
+print "{} , {:6}".format("Total events".ljust(maxlen+4), Total)
+print "{} , {:6} ,\t{:.3f}".format("Passed events".ljust(maxlen+4), Passed, float(Passed)/Total)
 print
 
 for l in L1filters :
-	print"{} ; {:6} ;\t{:.3f}" .format(l.ljust(maxlen+4),L1filters[l],float(L1filters[l])/Total)
-print
+	print"{} , {:6} ,\t{:.3f}" .format(l.ljust(maxlen+4),L1filters[l],float(L1filters[l])/Total)
 
-for path in HLTpaths :
-	print "{} ; {:6} ;\t{:.3f}" .format(path.ljust(maxlen+4),HLTpaths[path],float(HLTpaths[path])/Total)
+for path in HLTpathsList :
+	print "{} , {:6} ,\t{:.3f}" .format(path.ljust(maxlen+4),HLTpaths[path],float(HLTpaths[path])/Total)
 print

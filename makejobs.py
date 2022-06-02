@@ -17,7 +17,6 @@ opts, args = parser.parse_args()
 
 
 help_text = '\npython makejobs.py <jobName> <CMSSWrel> <filelist> -p <proxyPath> -n <nFiles> -q <jobFlavour> \n'
-help_text += '\n<cfgFileName> (mandatory) = name of your configuration file (e.g. hlt_config.py)'
 help_text += '\n<jobName> (mandatory) = name of the job (eg. Jobs_test)'
 help_text += '\n<CMSSWrel> (mandatory) = directory where the top of a CMSSW release is located (eg. $CMSSW_BASE)'
 help_text += '\n<filelist> (mandatory) = name of the text file which contains a list of sample root files'
@@ -36,9 +35,9 @@ for line in hltGetConfiglines :
 	line = line.rstrip()
 	if "#" in line : continue
 	if not len(line) : continue
-	hltGetConfig = line
+	if "hltGetConfiguration" in line : hltGetConfig = line
 	
-print hltGetConfig
+#print hltGetConfig
 
 if not "hltGetConfiguration.py" not in hltGetConfig : sys.exit("Error: Invalid hltGetConfiguration command in hltGetConfiguration.py")
 
@@ -74,6 +73,7 @@ for line in lines :
 	outputfile.write("eval `scramv1 runtime -sh`\n")
 	outputfile.write('cd $TMPDIR\n')
 	outputfile.write(hltGetConfig+" --input "+line+" > hlt.py\n")
+#	outputfile.write("cat /afs/cern.ch/user/s/sonawane/HLT/hlt_eff_study_releases/CMSSW_12_4_0_pre2/src/menu_test/HLT_signal_efficiency/fix.txt >> hlt.py\n")
 	outputfile.write('cmsRun hlt.py\n')
 	outputfile.close()
 	k+=1

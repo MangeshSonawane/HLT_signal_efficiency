@@ -53,7 +53,8 @@ for jobN in os.listdir(jobDir) :
 		for h in HLTpaths :		
 			if h in line and "Modules in Path" not in line:
 				chunks = line.split()
-				HLTpaths[h] +=int(chunks[4])
+				try : HLTpaths[h] +=int(chunks[4])
+				except : continue
 
 		for l in L1filters :
 			if l in line and flags[l] :
@@ -67,17 +68,22 @@ for jobN in os.listdir(jobDir) :
 			chunks = line.split()
 			Total += int(chunks[4])
 			Passed += int(chunks[7])
+#			print jobN, chunks[4]
 	if not passed :
 		print jobN
 
 #print 
-print "{} , {:6}".format("Total events".ljust(maxlen+4), Total)
-print "{} , {:6} ,\t{:.3f}".format("Passed events".ljust(maxlen+4), Passed, float(Passed)/Total)
+print "{}  {:6}".format("Total events".ljust(maxlen+4), Total)
+print "{}  {:6} \t{:.3f}".format("Passed events".ljust(maxlen+4), Passed, float(Passed)/Total)
+print "{}  \t{:.3f}".format("Passed events".ljust(maxlen+4), float(Passed)/Total)
 print
 
 for l in L1filters :
-	print"{} , {:6} ,\t{:.3f}" .format(l.ljust(maxlen+4),L1filters[l],float(L1filters[l])/Total)
+#	print"{}  {:6} \t{:.3f}" .format(l.ljust(maxlen+4),L1filters[l],float(L1filters[l])/Total)
+	print"{}  \t{:.3f}" .format(l.ljust(maxlen+4),float(L1filters[l])/Total)
 
 for path in HLTpathsList :
-	print "{} , {:6} ,\t{:.3f}" .format(path.ljust(maxlen+4),HLTpaths[path],float(HLTpaths[path])/Total)
+#	print "{}  {:6} \t{:.3f}" .format(path.ljust(maxlen+4),HLTpaths[path],float(HLTpaths[path])/Total)
+	print "{}  \t{:.3f}" .format(path.ljust(maxlen+4),float(HLTpaths[path])/Total)
+
 print
